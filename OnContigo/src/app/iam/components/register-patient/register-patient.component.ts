@@ -7,6 +7,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Profile} from '../../../users/models/profile.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {StorageService} from '../../../shared/services/storage.service';
+import {Router} from '@angular/router';
 
 
 
@@ -50,7 +51,7 @@ export class RegisterPatientComponent {
     private profileService: ProfileService,
     private snackBar: MatSnackBar,
     private storageService: StorageService,
-
+    private router: Router
   ) {}
 
   removeImage(){
@@ -122,6 +123,10 @@ export class RegisterPatientComponent {
 
             this.profileService.create(patientProfile).subscribe(
               (response) => {
+
+                this.userApiService.setIsDoctor(false);
+                if (response.id !== undefined) {this.patientService.setPatientId(response.id);}
+                this.router.navigateByUrl('/patient/home');
                 this.snackBar.open('Bienvenido ' + patientProfile.firstName + ' 🤗', 'Cerrar', {
                   duration: 2000
                 });

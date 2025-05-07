@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserApiService} from '../../../users/services/user.service';
-import {PatientService} from '../../../users/services/patient.service';
 import {AuthenticationApiService} from '../../services/authentication-api.service';
 import {ProfileService} from '../../../users/services/profile.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {StorageService} from '../../../shared/services/storage.service';
 import {Profile} from '../../../users/models/profile.model';
+import {DoctorService} from '../../../users/services/doctor.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register-doctor',
@@ -42,12 +43,12 @@ export class RegisterDoctorComponent {
 
   constructor(
     private userApiService: UserApiService,
-    private patientService: PatientService,
+    private doctorService: DoctorService,
     private authenticationApiService: AuthenticationApiService,
     private profileService: ProfileService,
     private snackBar: MatSnackBar,
     private storageService: StorageService,
-
+    private router: Router
   ) {}
 
   removeImage(){
@@ -117,6 +118,10 @@ export class RegisterDoctorComponent {
 
             this.profileService.create(patientProfile).subscribe(
               (response) => {
+
+                this.userApiService.setIsDoctor(true);
+                if (response.id !== undefined) {this.doctorService.setDoctorId(response.id);}
+                this.router.navigateByUrl('/doctor/home');
                 this.snackBar.open('Bienvenido ' + patientProfile.firstName + ' 🤗', 'Cerrar', {
                   duration: 2000
                 });
