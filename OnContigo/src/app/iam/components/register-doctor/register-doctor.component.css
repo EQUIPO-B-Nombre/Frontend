@@ -1,0 +1,350 @@
+:root {
+  /* Variables de color y estilo */
+  --primary-color: #3f51b5;
+  --primary-dark: #303f9f;
+  --error-color: #f44336;
+  --text-color: #333;
+  --light-gray: #f5f5f5;
+  --medium-gray: #9e9e9e;
+  --border-radius: 8px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Estilos base */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  background-color: #fafafa;
+  padding: 2rem;
+}
+
+.register-container .background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/images/fondo-rosa.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+/* Tarjeta principal */
+.register-patient-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--box-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.register-patient-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón de volver */
+.register-patient-card .back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: var(--transition);
+  border-radius: 50%;
+}
+
+.register-patient-card .back-button:hover {
+  background-color: var(--light-gray);
+  transform: translateX(-2px);
+}
+
+.register-patient-card .back-button mat-icon {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+/* Encabezado y logo */
+.logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+}
+
+.logo-container .logo {
+  height: 80px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo-container .logo:hover {
+  transform: scale(1.05);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+
+.card-header .card-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.card-header .card-subtitle {
+  color: var(--medium-gray);
+  font-size: 1rem;
+}
+
+/* Sección de imagen de perfil */
+.profile-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-image-section .image-preview,
+.profile-image-section .image-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--light-gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1rem;
+  border: 3px solid var(--primary-color);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.profile-image-section .image-preview:hover,
+.profile-image-section .image-placeholder:hover {
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image-section .image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-image-section .image-preview mat-icon,
+.profile-image-section .image-placeholder mat-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: var(--medium-gray);
+}
+
+.profile-image-section .image-preview span,
+.profile-image-section .image-placeholder span {
+  position: absolute;
+  bottom: -20px;
+  font-size: 12px;
+  color: var(--medium-gray);
+}
+
+.profile-image-section .remove-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--error-color);
+  transition: all 0.2s ease;
+}
+
+.profile-image-section .remove-image:hover {
+  transform: scale(1.1);
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-upload-container .upload-button {
+  margin-bottom: 0.5rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.image-upload-container .upload-button:hover {
+  background-color: var(--light-gray);
+  transform: translateY(-2px);
+}
+
+.image-upload-container .image-requirements {
+  font-size: 12px;
+  color: var(--medium-gray);
+  text-align: center;
+}
+
+/* Contenedor de dos columnas */
+.two-columns-container {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.two-columns-container .form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Campos del formulario */
+.modern-field {
+  margin-bottom: 1.2rem;
+}
+
+.modern-field .mat-form-field-wrapper {
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+}
+
+.modern-field .mat-form-field-outline {
+  background-color: white;
+  border-radius: var(--border-radius);
+}
+
+.modern-field .mat-icon {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+.modern-field:hover .mat-icon {
+  color: var(--primary-dark);
+}
+
+.modern-field .mat-input-element {
+  caret-color: var(--primary-color);
+}
+
+.modern-field .mat-error {
+  font-size: 0.75rem;
+  color: var(--error-color);
+}
+
+/* Botones de acción */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-actions .submit-button {
+  padding: 0.5rem 2rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.form-actions .submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(63, 81, 181, 0.3);
+  background-color: var(--primary-dark);
+}
+
+.form-actions .submit-button:active {
+  transform: translateY(0);
+}
+
+.form-actions .cancel-button {
+  padding: 0.5rem 2rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.form-actions .cancel-button:hover {
+  background-color: var(--light-gray);
+  transform: translateY(-2px);
+}
+
+/* Media Queries para responsive */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 1rem;
+  }
+
+  .register-patient-card {
+    padding: 1.5rem;
+  }
+
+  .two-columns-container {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-patient-card .card-title {
+    font-size: 1.5rem !important;
+  }
+
+  .register-patient-card .card-subtitle {
+    font-size: 0.9rem !important;
+  }
+
+  .profile-image-section .image-preview,
+  .profile-image-section .image-placeholder {
+    width: 100px;
+    height: 100px;
+  }
+
+  .register-patient-card .back-button {
+    top: 0.5rem !important;
+    left: 0.5rem !important;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.register-patient-card {
+  animation: fadeIn 0.5s ease-out forwards;
+}

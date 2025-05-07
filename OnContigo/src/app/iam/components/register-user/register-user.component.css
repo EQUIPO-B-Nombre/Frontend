@@ -1,0 +1,179 @@
+/* Estilos base */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  background-color: #fafafa;
+  padding: 2rem;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/images/fondo-rosa.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+/* Tarjeta principal */
+.register-user {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  text-align: center;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  height: 80px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+/* Títulos */
+.title {
+  font-size: 2rem;
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.register-user mat-card-content h2 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.role-description {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+/* Botones de rol */
+.roles {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.role {
+  flex: 1;
+  max-width: 250px;
+}
+
+.doctor-btn {
+  background-color: #f3c081 !important;
+  color: white !important;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.patient-btn {
+  background-color: #3f51b5 !important;
+  color: white !important;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.doctor-btn:hover, .patient-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.role-text {
+  margin-top: 1rem;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+/* Enlace de login */
+.login {
+  margin-top: 1.5rem;
+}
+
+.login a {
+  color: #ff4d88;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.login a:hover {
+  text-decoration: underline;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .roles {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .role {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .logo {
+    height: 70px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-user {
+    padding: 1.5rem;
+  }
+
+  .logo {
+    height: 60px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .register-user mat-card-content h2 {
+    font-size: 1.1rem;
+  }
+}

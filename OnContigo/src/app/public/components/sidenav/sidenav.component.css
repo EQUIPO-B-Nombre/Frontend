@@ -1,0 +1,71 @@
+.sidenav {
+  background-color: #D2DAFA;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  width: 12rem;
+  height: 100vh;
+  box-shadow: 0.063rem 0 1.25rem 0 gray;
+  padding-top: 3.5rem;
+  transition: all 0.3s ease;
+}
+
+.sidenav-nav {
+  list-style: none;
+  padding: 0.938rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidenav-nav-item {
+  width: 100%;
+}
+
+.sidenav-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  color: #4F2F00;
+  font-weight: 500;
+}
+
+.sidenav-nav-link:hover,
+.sidenav-nav-link.active {
+  background-color: #B8C2F2;
+}
+
+.sidenav-link-icon {
+  font-size: 22px;
+  margin-right: 0.75rem;
+  color: #4F2F00;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sidenav-link-text {
+  flex: 1;
+  color: #4F2F00;
+}
+
+/* Cerrar sesión */
+.sidenav-nav-link.logout-link {
+  background-color: #EF4444;
+  color: white;
+}
+
+.sidenav-nav-link.logout-link:hover {
+  background-color: #DC2626;
+}
+
+.sidenav-nav-link.logout-link .sidenav-link-icon {
+  color: white;
+}
+
+.sidenav-nav-link.logout-link .sidenav-link-text {
+  color: white;
+}

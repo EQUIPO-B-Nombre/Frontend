@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="background-image"></div>
+
+  <mat-card class="register-user" aria-label="Container for register user form">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="Logo OnContigo" class="logo">
+    </div>
+
+    <h1 class="title">Registrarse</h1>
+    <mat-card-content>
+      <h2>¡Te damos la bienvenida a OnContigo!</h2>
+
+      <p class="role-description">Para empezar, ¿cuál es tu rol?</p>
+      <div class="roles">
+        <div class="role">
+          <button mat-flat-button class="doctor-btn" (click)="registerPatient()">
+            Doctor
+          </button>
+
+        </div>
+        <div class="role">
+          <button mat-flat-button class="patient-btn" (click)="registerDoctor()">
+            Paciente
+          </button>
+
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <p class="login"><a routerLink="/login">¿Ya tienes una cuenta? Inicia sesión</a></p>
+    </mat-card-actions>
+  </mat-card>
+</div>

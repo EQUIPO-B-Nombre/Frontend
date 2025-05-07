@@ -1,0 +1,49 @@
+<div class="background">
+  <div class="login-box">
+    <div class="login-content">
+      <h2>Inicio de Sesión</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email:</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            El correo es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Ingresa un correo válido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Contraseña:</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+          <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button" aria-label="Mostrar u ocultar contraseña">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria.
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button class="login-btn" type="submit" [disabled]="loginForm.invalid">
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <div class="register-option">
+        <p>¿No tienes una cuenta?
+          <a (click)="redirectSignUp()">Regístrate aquí</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="logo-circle">
+      <img [src]="'assets/images/logo-oncontigo.png'" alt="Oncontigo Logo" />
+    </div>
+  </div>
+</div>

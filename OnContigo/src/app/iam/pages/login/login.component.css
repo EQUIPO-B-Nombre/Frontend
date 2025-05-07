@@ -1,0 +1,100 @@
+.background {
+  background-image: url('/assets/images/fondo-rosa.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.login-box {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  display: flex;
+  padding: 40px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  gap: 40px;
+  align-items: center;
+}
+
+.login-content {
+  max-width: 300px;
+
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .login-btn {
+    background-color: #ff80aa;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  .login-btn:hover {
+    background-color: #ff4d88;
+  }
+
+  .register-option {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .register-option a {
+    color: #ff80aa;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .register-option a:hover {
+    text-decoration: underline;
+  }
+}
+
+.logo-circle {
+  background: white;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100px;
+    height: auto;
+  }
+}
+
+mat-error {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #ff4d88;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+mat-error::before {
+  content: '⚠️';
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+
