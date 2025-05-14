@@ -32,7 +32,7 @@ import { SignupComponent } from './iam/pages/signup/signup.component';
 import { SignupPatientComponent } from './iam/pages/signup-patient/signup-patient.component';
 import { SignupDoctorComponent } from './iam/pages/signup-doctor/signup-doctor.component';
 import { SidenavComponent } from './public/components/sidenav/sidenav.component';
-import { HomeDoctorComponent } from './public/pages/home-doctor/home-doctor.component';
+import {HomeDoctorComponent} from './public/pages/home-doctor/home-doctor.component';
 import { HomePatientComponent } from './public/pages/home-patient/home-patient.component';
 import { HeaderComponent } from './public/components/header/header.component';
 
