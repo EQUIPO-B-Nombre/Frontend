@@ -1,0 +1,135 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ff9bb3;
+  padding: 10px 20px;
+  height: 70px;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+}
+
+.profile-image {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Content layout */
+.content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 240px;
+  background-color: #e6eeff;
+  padding: 20px 0;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  padding: 15px 20px;
+  font-weight: bold;
+}
+
+.nav-item.active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  background-color: #ffebf0;
+  padding: 20px;
+  background-image: url('/OnContigo/src/assets/images/fondo-rosa.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.welcome-message {
+  margin-bottom: 40px;
+}
+
+.welcome-message h2 {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.welcome-message h3 {
+  font-size: 20px;
+  margin-top: 0;
+  color: #333;
+}
+
+/* Cards styles */
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+  margin-bottom: 20px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.card-button {
+  background-color: #b3c7ff;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.card-button:hover {
+  background-color: #9cb3ff;
+}
