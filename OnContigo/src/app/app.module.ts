@@ -35,6 +35,7 @@ import { SidenavComponent } from './public/components/sidenav/sidenav.component'
 import {HomeDoctorComponent} from './public/pages/home-doctor/home-doctor.component';
 import { HomePatientComponent } from './public/pages/home-patient/home-patient.component';
 import { HeaderComponent } from './public/components/header/header.component';
+import { PatientsDoctorComponent } from './public/pages/patients-doctor/patients-doctor.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { HeaderComponent } from './public/components/header/header.component';
     MatPaginatorModule,
     MatTooltipModule,
     ReactiveFormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    PatientsDoctorComponent
   ],
   providers: [
     provideAnimationsAsync()

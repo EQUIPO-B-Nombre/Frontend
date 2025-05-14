@@ -1,0 +1,408 @@
+.patients-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background-color: #ffebf0;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #ff9bb3;
+  padding: 10px 20px;
+  height: 70px;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+  margin-right: 20px;
+}
+
+.title {
+  color: #333;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Content layout */
+.content {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+}
+
+/* Table styles */
+.table-container {
+  flex: 1;
+  overflow-x: auto;
+  margin-right: 20px;
+}
+
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.patients-table th {
+  background-color: #4a5568;
+  color: white;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: bold;
+}
+
+.patients-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.patients-table tr.odd-row {
+  background-color: #b3c7ff;
+}
+
+.patients-table tr:not(.odd-row) {
+  background-color: #d6e0ff;
+}
+
+.photo-cell {
+  width: 60px;
+}
+
+.patient-photo {
+  width: 40px;
+  height: 40px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.alert-cell {
+  width: 60px;
+  text-align: center;
+}
+
+.alert-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #4a5568;
+  border-radius: 50%;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.alert-icon:hover {
+  background-color: #2d3748;
+}
+
+/* Actions panel styles */
+.actions-panel {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: white;
+  gap: 10px;
+}
+
+.add-button {
+  background-color: #4a5568;
+}
+
+.details-button {
+  background-color: #4a5568;
+}
+
+.prescribe-button {
+  background-color: #4a5568;
+}
+
+.delete-button {
+  background-color: #4a5568;
+}
+
+.action-button:hover {
+  opacity: 0.9;
+}
+
+.action-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.alarm-modal {
+  background-color: #b3c7ff;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+  text-align: center;
+  margin: 20px 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.modal-content {
+  padding: 0 30px 20px;
+}
+
+.patient-info {
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.info-label {
+  font-weight: bold;
+  width: 150px;
+  color: #333;
+}
+
+.info-value {
+  flex: 1;
+}
+
+.time-selector {
+  margin-bottom: 20px;
+}
+
+.time-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-input {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.time-arrow {
+  background-color: #e2e8f0;
+  border: none;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.time-arrow.up {
+  margin-bottom: 5px;
+}
+
+.time-arrow.down {
+  margin-top: 5px;
+}
+
+.time-separator {
+  margin: 0 15px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background-color: #333;
+  border-radius: 50%;
+}
+
+.note-container {
+  margin-top: 20px;
+}
+
+.note-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.note-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  font-family: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.modal-button {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal-button.cancel {
+  background-color: #4a5568;
+  color: white;
+}
+
+.modal-button.confirm {
+  background-color: #4a5568;
+  color: white;
+}
+
+.modal-button:hover {
+  opacity: 0.9;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .table-container {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .actions-panel {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .action-button {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .patients-table {
+    font-size: 14px;
+  }
+
+  .patients-table th,
+  .patients-table td {
+    padding: 8px 10px;
+  }
+
+  .action-button {
+    min-width: 150px;
+  }
+
+  .alarm-modal {
+    width: 90%;
+  }
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .info-label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions-panel {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+
+  .time-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .time-separator {
+    flex-direction: row;
+    height: auto;
+    width: 40px;
+    justify-content: space-around;
+  }
+}

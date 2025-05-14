@@ -6,7 +6,7 @@ import { SignupPatientComponent } from './iam/pages/signup-patient/signup-patien
 import { SignupDoctorComponent } from './iam/pages/signup-doctor/signup-doctor.component';
 import {HomeDoctorComponent} from './public/pages/home-doctor/home-doctor.component';
 import {HomePatientComponent} from './public/pages/home-patient/home-patient.component';
-
+import {PatientsDoctorComponent} from './public/pages/patients-doctor/patients-doctor.component';
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
@@ -14,8 +14,8 @@ const routes: Routes = [
   {path: 'sign-up/patient', component: SignupPatientComponent},
   {path: 'sign-up/doctor', component: SignupDoctorComponent},
   {path: 'doctor/home', component: HomeDoctorComponent},
-  {path: 'patient/home', component: HomePatientComponent}
-
+  {path: 'patient/home', component: HomePatientComponent},
+  {path: 'doctor/patients', component: PatientsDoctorComponent}
 
 
 ];
