@@ -8,6 +8,7 @@ import { Component, type OnInit } from "@angular/core"
 })
 export class HomeDoctorComponent implements OnInit {
   doctorName = "Jane Doe"
+  doctorProfileImage = "assets/images/doctor-profile.png"
 
   constructor() {}
 
