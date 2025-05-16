@@ -1,0 +1,88 @@
+<div class="calendar-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
+    </div>
+    <div class="navigation">
+      <a href="/doctor/calendar" class="nav-link active">Calendario</a>
+      <a href="/doctor/patients" class="nav-link" (click)="navigateToPatients()">Lista de Pacientes</a>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Left Panel - Patient List -->
+    <div class="patients-panel">
+      <h2 class="panel-title">Calendario</h2>
+
+      <div class="patients-list">
+        <div class="patient-card" *ngFor="let patient of patients">
+          <div class="patient-photo">
+            <img [src]="patient.photo" alt="Foto del paciente">
+          </div>
+          <div class="patient-info">
+            <div class="patient-name">{{ patient.name }}</div>
+            <div class="appointment-date">{{ patient.appointmentDate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Calendar -->
+    <div class="calendar-panel">
+      <div class="calendar-grid">
+        <!-- Calendar Header -->
+        <div class="calendar-header">
+          <div class="day-header" *ngFor="let day of weekDays; let i = index">
+            <div class="day-name">{{ day }}</div>
+            <div class="day-number">{{ dayNumbers[i] }}</div>
+          </div>
+        </div>
+
+        <!-- Calendar Body -->
+        <div class="calendar-body">
+          <!-- Time Column -->
+          <div class="time-column">
+            <div class="time-slot" *ngFor="let hour of hours">
+              {{ hour }}
+            </div>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div class="calendar-grid-content">
+            <!-- Grid Lines -->
+            <div class="grid-lines">
+              <div class="horizontal-lines">
+                <div class="grid-line" *ngFor="let hour of hours"></div>
+              </div>
+              <div class="vertical-lines">
+                <div class="grid-line" *ngFor="let day of weekDays"></div>
+              </div>
+            </div>
+
+            <!-- Appointments -->
+            <div class="appointments">
+              <div class="appointment" *ngFor="let appointment of appointments"
+                   [ngStyle]="{'top': getAppointmentPosition(appointment.day, appointment.time).top,
+                              'left': getAppointmentPosition(appointment.day, appointment.time).left}"
+                   [ngClass]="{'has-alert': appointment.hasAlert}">
+                <div class="appointment-content">
+                  <div *ngIf="appointment.hasAlert" class="alert-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                      <line x1="12" y1="9" x2="12" y2="13"></line>
+                      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                  </div>
+                  <div class="appointment-day">{{ appointment.day }}</div>
+                  <div class="appointment-time">{{ appointment.time }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

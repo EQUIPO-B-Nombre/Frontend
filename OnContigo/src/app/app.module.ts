@@ -36,6 +36,7 @@ import {HomeDoctorComponent} from './public/pages/home-doctor/home-doctor.compon
 import { HomePatientComponent } from './public/pages/home-patient/home-patient.component';
 import { HeaderComponent } from './public/components/header/header.component';
 import { PatientsDoctorComponent } from './public/pages/patients-doctor/patients-doctor.component';
+import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar-doctor.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { PatientsDoctorComponent } from './public/pages/patients-doctor/patients
     MatTooltipModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-    PatientsDoctorComponent
+    PatientsDoctorComponent,
+    CalendarDoctorComponent
   ],
   providers: [
     provideAnimationsAsync()
