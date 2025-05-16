@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1dbe4a23-38e5-4ce2-8b3c-5fffa3e0c4e0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/OnContigo/src/assets/images/patient-list-icon.png" afterDir="false" />
+    <list default="true" id="1dbe4a23-38e5-4ce2-8b3c-5fffa3e0c4e0" name="Changes" comment="refactor(doctor): change routerLinks">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/home-doctor/home-doctor.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/app/public/pages/patients-doctor/patients-doctor.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OnContigo/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/OnContigo/src/environments/environment.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,11 +79,83 @@
       <workItem from="1747177641978" duration="927000" />
       <workItem from="1747180646163" duration="2000" />
       <workItem from="1747230305134" duration="970000" />
-      <workItem from="1747231302789" duration="3301000" />
+      <workItem from="1747231302789" duration="5495000" />
+      <workItem from="1747236937958" duration="2802000" />
+      <workItem from="1747253839466" duration="968000" />
+      <workItem from="1747254870384" duration="326000" />
+      <workItem from="1747339589090" duration="3846000" />
+      <workItem from="1747361985177" duration="2589000" />
     </task>
+    <task id="LOCAL-00001" summary="feat(doctor): add doctor menu and assets">
+      <option name="closed" value="true" />
+      <created>1747234786568</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747234786568</updated>
+    </task>
+    <task id="LOCAL-00002" summary="refactor(doctor): add hard-coded information before calling the API">
+      <option name="closed" value="true" />
+      <created>1747235451031</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747235451031</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat(doctor): add asset for background menu">
+      <option name="closed" value="true" />
+      <created>1747235569555</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1747235569555</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(doctor): add asset for profile doctor menu">
+      <option name="closed" value="true" />
+      <created>1747235696475</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747235696475</updated>
+    </task>
+    <task id="LOCAL-00005" summary="refactor(doctor): change header only for components">
+      <option name="closed" value="true" />
+      <created>1747236359165</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1747236359165</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat(doctor): add patient list component">
+      <option name="closed" value="true" />
+      <created>1747241796629</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1747241796629</updated>
+    </task>
+    <task id="LOCAL-00007" summary="refactor(doctor): change routerLinks">
+      <option name="closed" value="true" />
+      <created>1747241864437</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1747241864437</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(doctor): add doctor menu and assets" />
+    <MESSAGE value="refactor(doctor): add hard-coded information before calling the API" />
+    <MESSAGE value="feat(doctor): add asset for background menu" />
+    <MESSAGE value="feat(doctor): add asset for profile doctor menu" />
+    <MESSAGE value="refactor(doctor): change header only for components" />
+    <MESSAGE value="feat(doctor): add patient list component" />
+    <MESSAGE value="refactor(doctor): change routerLinks" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor(doctor): change routerLinks" />
   </component>
 </project>

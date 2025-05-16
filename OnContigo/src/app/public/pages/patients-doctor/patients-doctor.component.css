@@ -18,14 +18,30 @@
 .logo {
   height: 50px;
   width: auto;
-  margin-right: 20px;
+  margin-right: 40px;
 }
 
-.title {
-  color: #333;
-  font-size: 20px;
+.navigation {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
   font-weight: bold;
-  margin: 0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Content layout */
@@ -68,6 +84,20 @@
 
 .patients-table tr:not(.odd-row) {
   background-color: #d6e0ff;
+}
+
+.patients-table tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.patients-table tr:hover {
+  opacity: 0.9;
+}
+
+.patients-table tr.selected-row {
+  background-color: #8da9ff;
+  border: 2px solid #4a5568;
 }
 
 .photo-cell {
@@ -148,6 +178,10 @@
   background-color: #4a5568;
 }
 
+.treatments-button {
+  background-color: #4a5568;
+}
+
 .delete-button {
   background-color: #4a5568;
 }
@@ -175,13 +209,17 @@
   z-index: 1000;
 }
 
-.alarm-modal {
+.alarm-modal, .delete-modal, .details-modal, .add-patient-modal {
   background-color: #b3c7ff;
   border-radius: 8px;
   width: 500px;
   max-width: 90%;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details-modal {
+  width: 700px;
 }
 
 .modal-title {
@@ -192,8 +230,17 @@
   font-weight: bold;
 }
 
-.modal-content {
+.modal-content, .details-content {
   padding: 0 30px 20px;
+}
+
+.details-content {
+  display: flex;
+  gap: 30px;
+}
+
+.patient-details {
+  flex: 1;
 }
 
 .patient-info {
@@ -202,7 +249,7 @@
 
 .info-row {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .info-label {
@@ -213,6 +260,87 @@
 
 .info-value {
   flex: 1;
+}
+
+.diagnosis-row {
+  align-items: center;
+}
+
+.diagnosis-container {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.diagnosis-value {
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.diagnosis-input {
+  flex: 1;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.patient-photo-large {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #8662c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid white;
+}
+
+.patient-photo-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.chat-button:hover {
+  background-color: #f8f8f8;
 }
 
 .time-selector {
@@ -304,6 +432,25 @@
   font-family: inherit;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-container label {
+  font-weight: bold;
+  color: #333;
+}
+
+.dni-input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
 .modal-actions {
   display: flex;
   justify-content: center;
@@ -355,6 +502,14 @@
     flex: 1;
     min-width: 200px;
   }
+
+  .details-content {
+    flex-direction: column;
+  }
+
+  .patient-photo-container {
+    margin-top: 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -371,7 +526,7 @@
     min-width: 150px;
   }
 
-  .alarm-modal {
+  .alarm-modal, .delete-modal, .details-modal, .add-patient-modal {
     width: 90%;
   }
 
