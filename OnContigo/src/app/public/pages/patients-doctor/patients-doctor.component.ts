@@ -15,6 +15,13 @@ interface Patient {
   diagnosis?: string
 }
 
+// Añadir la interfaz Medication después de la interfaz Patient
+interface Medication {
+  id: number
+  name: string
+  instructions: string
+}
+
 interface AlarmData {
   patientId: number
   patientName: string
@@ -52,6 +59,16 @@ export class PatientsDoctorComponent implements OnInit {
 
   patientToDelete: Patient | null = null
   selectedPatient: Patient | null = null
+
+  // Añadir estas propiedades a la clase PatientsDoctorComponent
+  showMedicationModal = false
+  medications: Medication[] = []
+  newMedication: Medication = {
+    id: 0,
+    name: "",
+    instructions: "",
+  }
+  selectedMedicationIndex: number | null = null
 
   constructor() {}
 
@@ -252,13 +269,9 @@ export class PatientsDoctorComponent implements OnInit {
     // Implementar lógica para abrir el chat
   }
 
+  // Modificar el método prescribeMedication para que abra el modal
   prescribeMedication(): void {
-    if (!this.selectedPatientId) {
-      alert("Por favor, seleccione un paciente primero")
-      return
-    }
-    console.log("Recetar medicamento al paciente", this.selectedPatientId)
-    // Implementar lógica para recetar medicamento
+    this.openMedicationModal()
   }
 
   openDeleteModal(): void {
@@ -328,5 +341,82 @@ export class PatientsDoctorComponent implements OnInit {
 
   decrementMinutes(): void {
     this.selectedAlarm.minutes = (this.selectedAlarm.minutes - 1 + 60) % 60
+  }
+
+  // Añadir estos métodos a la clase PatientsDoctorComponent
+  openMedicationModal(): void {
+    if (!this.selectedPatientId) {
+      alert("Por favor, seleccione un paciente primero")
+      return
+    }
+
+    const patient = this.patients.find((p) => p.id === this.selectedPatientId)
+    if (patient) {
+      // Cargar medicamentos existentes (simulado)
+      this.medications = [
+        { id: 1, name: "Paracetamol", instructions: "Cada 8 (hrs/Día) por 7" },
+        { id: 2, name: "Ibuprofeno", instructions: "Cada 12 (hrs/Día) por 5" },
+      ]
+      this.resetNewMedication()
+      this.showMedicationModal = true
+    }
+  }
+
+  closeMedicationModal(): void {
+    this.showMedicationModal = false
+    this.resetNewMedication()
+    this.selectedMedicationIndex = null
+  }
+
+  resetNewMedication(): void {
+    this.newMedication = {
+      id: 0,
+      name: "",
+      instructions: "",
+    }
+  }
+
+  addMedication(): void {
+    if (!this.newMedication.name.trim()) {
+      alert("Por favor, ingrese el nombre del medicamento")
+      return
+    }
+
+    const newId = this.medications.length > 0 ? Math.max(...this.medications.map((m) => m.id)) + 1 : 1
+
+    this.medications.push({
+      id: newId,
+      name: this.newMedication.name,
+      instructions: this.newMedication.instructions,
+    })
+
+    this.resetNewMedication()
+  }
+
+  editMedication(index: number): void {
+    this.selectedMedicationIndex = index
+    this.newMedication = { ...this.medications[index] }
+  }
+
+  updateMedication(): void {
+    if (this.selectedMedicationIndex !== null) {
+      this.medications[this.selectedMedicationIndex] = { ...this.newMedication }
+      this.resetNewMedication()
+      this.selectedMedicationIndex = null
+    }
+  }
+
+  deleteMedication(index: number): void {
+    this.medications.splice(index, 1)
+    if (this.selectedMedicationIndex === index) {
+      this.resetNewMedication()
+      this.selectedMedicationIndex = null
+    }
+  }
+
+  confirmMedications(): void {
+    console.log("Medicamentos recetados:", this.medications)
+    // Aquí implementarías la lógica para guardar los medicamentos en la base de datos
+    this.showMedicationModal = false
   }
 }

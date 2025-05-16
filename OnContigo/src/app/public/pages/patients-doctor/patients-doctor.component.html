@@ -5,8 +5,8 @@
       <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
     </div>
     <div class="navigation">
-      <a href="/doctor/calendar" class="nav-link">Calendario</a>
-      <a href="/doctor/patients" class="nav-link active">Lista de Pacientes</a>
+      <a href="#" class="nav-link">Calendario</a>
+      <a href="#" class="nav-link active">Lista de Pacientes</a>
     </div>
   </header>
 
@@ -276,6 +276,101 @@
 
       <div class="modal-actions">
         <button class="modal-button confirm" (click)="closeDetailsModal()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Medicamentos -->
+  <div class="modal-overlay" *ngIf="showMedicationModal">
+    <div class="medication-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Medicamentos</h2>
+        <button class="close-button" (click)="closeMedicationModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <div class="patient-info">
+          <div class="info-row">
+            <span class="info-label">Nombre completo:</span>
+            <span class="info-value">{{ patientToDelete?.name || 'Jane Doe' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DNI:</span>
+            <span class="info-value">{{ patientToDelete?.dni || '73805906' }}</span>
+          </div>
+        </div>
+
+        <div class="medication-content">
+          <!-- Lista de medicamentos -->
+          <div class="medications-list">
+            <div class="medications-table">
+              <div class="table-header">
+                <div class="header-cell medication-name">Medicamento</div>
+                <div class="header-cell medication-instructions">Instrucciones</div>
+              </div>
+
+              <div class="table-body">
+                <div class="table-row" *ngFor="let medication of medications; let i = index"
+                     [ngClass]="{'selected': selectedMedicationIndex === i}"
+                     (click)="editMedication(i)">
+                  <div class="cell medication-name">{{ medication.name }}</div>
+                  <div class="cell medication-instructions">{{ medication.instructions }}</div>
+                </div>
+
+                <!-- Filas vacías para completar la tabla -->
+                <div class="table-row empty" *ngFor="let _ of [1,2,3,4,5,6,7,8].slice(medications.length)">
+                  <div class="cell medication-name"></div>
+                  <div class="cell medication-instructions"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-actions">
+              <button class="action-icon add" (click)="addMedication()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <button class="action-icon edit" [disabled]="selectedMedicationIndex === null" (click)="updateMedication()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="action-icon delete" [disabled]="selectedMedicationIndex === null" (click)="selectedMedicationIndex !== null && deleteMedication(selectedMedicationIndex)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulario para nuevo medicamento -->
+          <div class="new-medication">
+            <h3>Nuevo Medicamento</h3>
+
+            <div class="form-group">
+              <label>Medicamento</label>
+              <input type="text" class="form-control" [(ngModel)]="newMedication.name">
+            </div>
+
+            <div class="form-group">
+              <label>Instrucciones</label>
+              <textarea class="form-control" rows="5" [(ngModel)]="newMedication.instructions"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="modal-button confirm" (click)="confirmMedications()">Confirmar</button>
+              <button class="modal-button cancel" (click)="closeMedicationModal()">Cancelar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
