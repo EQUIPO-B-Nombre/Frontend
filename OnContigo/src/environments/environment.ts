@@ -11,8 +11,7 @@ export const environment = {
   },
 
   // Trabajar de manera local
-  baseURL: 'http://localhost:8080/api/v1',
-
+  baseURL: 'https://oncontigo-webservice.azurewebsites.net//api/v1',
   //urls for the different endpoints
   authenticationURL: '/authentication',
   userURL: '/users',

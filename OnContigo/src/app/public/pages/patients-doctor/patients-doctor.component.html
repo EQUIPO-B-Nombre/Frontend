@@ -1,0 +1,377 @@
+<div class="patients-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
+    </div>
+    <div class="navigation">
+      <a href="#" class="nav-link">Calendario</a>
+      <a href="#" class="nav-link active">Lista de Pacientes</a>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="table-container">
+      <table class="patients-table">
+        <thead>
+        <tr>
+          <th>Foto</th>
+          <th>DNI</th>
+          <th>Nombre completo</th>
+          <th>Últ. Cita</th>
+          <th>Prox. Cita</th>
+          <th>Alarma</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let patient of patients; let i = index"
+            [ngClass]="{'odd-row': i % 2 !== 0, 'selected-row': isPatientSelected(patient.id)}"
+            (click)="selectPatient(patient.id)">
+          <td class="photo-cell">
+            <div class="patient-photo">
+              <img *ngIf="patient.photoUrl" [src]="patient.photoUrl" alt="Foto de paciente">
+            </div>
+          </td>
+          <td>{{ patient.dni }}</td>
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.lastAppointment }}</td>
+          <td>{{ patient.nextAppointment }}</td>
+          <td class="alert-cell">
+            <button class="alert-icon" *ngIf="patient.hasAlert" (click)="openAlarmModal(patient); $event.stopPropagation()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions-panel">
+      <button class="action-button add-button" (click)="openAddPatientModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Agregar Paciente
+      </button>
+
+      <button class="action-button details-button" (click)="viewDetails()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="21" y1="10" x2="3" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="3" y2="18"></line>
+        </svg>
+        Ver detalles
+      </button>
+
+      <button class="action-button prescribe-button" (click)="prescribeMedication()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+          <line x1="9" y1="9" x2="15" y2="9"></line>
+          <line x1="9" y1="12" x2="15" y2="12"></line>
+          <line x1="9" y1="15" x2="13" y2="15"></line>
+        </svg>
+        Recetar Medicamento
+      </button>
+
+      <button class="action-button treatments-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="21" y1="10" x2="3" y2="10"></line>
+          <line x1="21" y1="6" x2="3" y2="6"></line>
+          <line x1="21" y1="14" x2="3" y2="14"></line>
+          <line x1="21" y1="18" x2="3" y2="18"></line>
+        </svg>
+        Sus Tratamientos
+      </button>
+
+      <button class="action-button delete-button" (click)="openDeleteModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        Eliminar Paciente
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de Agregar Paciente -->
+  <div class="modal-overlay" *ngIf="showAddPatientModal">
+    <div class="add-patient-modal">
+      <h2 class="modal-title">Agregar Paciente</h2>
+
+      <div class="modal-content">
+        <div class="input-container">
+          <label for="dni-input">Ingrese el DNI del paciente</label>
+          <input type="text" id="dni-input" class="dni-input" [(ngModel)]="newPatientDni">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-button cancel" (click)="closeAddPatientModal()">Cancelar</button>
+        <button class="modal-button confirm" (click)="addPatient()">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Alarma -->
+  <div class="modal-overlay" *ngIf="showAlarmModal">
+    <div class="alarm-modal">
+      <h2 class="modal-title">Alarma paciente</h2>
+
+      <div class="modal-content">
+        <div class="patient-info">
+          <div class="info-row">
+            <span class="info-label">Nombre completo:</span>
+            <span class="info-value">{{ selectedAlarm.patientName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DNI:</span>
+            <span class="info-value">{{ selectedAlarm.patientDni }}</span>
+          </div>
+        </div>
+
+        <div class="time-selector">
+          <span class="time-label">Asigna la hora:</span>
+
+          <div class="time-inputs">
+            <!-- Selector de horas -->
+            <div class="time-input-container">
+              <button class="time-arrow up" (click)="incrementHours()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+              </button>
+              <input type="text" class="time-input" [(ngModel)]="selectedAlarm.hours" readonly>
+              <button class="time-arrow down" (click)="decrementHours()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Separador -->
+            <div class="time-separator">
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+
+            <!-- Selector de minutos -->
+            <div class="time-input-container">
+              <button class="time-arrow up" (click)="incrementMinutes()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+              </button>
+              <input type="text" class="time-input" [(ngModel)]="selectedAlarm.minutes" readonly>
+              <button class="time-arrow down" (click)="decrementMinutes()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-container">
+          <span class="note-label">Nota:</span>
+          <textarea class="note-input" [(ngModel)]="selectedAlarm.note" placeholder="Escribe una nota..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-button cancel" (click)="closeAlarmModal()">Cancelar</button>
+        <button class="modal-button confirm" (click)="saveAlarm()">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Eliminar Paciente -->
+  <div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="delete-modal">
+      <h2 class="modal-title">¿Desea eliminar este Paciente?</h2>
+
+      <div class="modal-content">
+        <div class="patient-info">
+          <div class="info-row">
+            <span class="info-label">Nombre completo:</span>
+            <span class="info-value">{{ patientToDelete?.name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DNI:</span>
+            <span class="info-value">{{ patientToDelete?.dni }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-button cancel" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="modal-button confirm" (click)="confirmDeletePatient()">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Detalles del Paciente -->
+  <div class="modal-overlay" *ngIf="showDetailsModal">
+    <div class="details-modal">
+      <h2 class="modal-title">Detalles del Paciente</h2>
+
+      <div class="details-content">
+        <div class="patient-details">
+          <div class="info-row">
+            <span class="info-label">Nombre completo:</span>
+            <span class="info-value">{{ selectedPatient?.name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DNI:</span>
+            <span class="info-value">{{ selectedPatient?.dni }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Última Cita:</span>
+            <span class="info-value">{{ selectedPatient?.lastAppointment }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Próxima Cita:</span>
+            <span class="info-value">{{ selectedPatient?.nextAppointment }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{{ selectedPatient?.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Teléfono:</span>
+            <span class="info-value">{{ selectedPatient?.phone }}</span>
+          </div>
+          <div class="info-row diagnosis-row">
+            <span class="info-label">Diagnóstico:</span>
+            <div class="diagnosis-container">
+              <input *ngIf="isEditingDiagnosis" type="text" class="diagnosis-input" [(ngModel)]="selectedPatient!.diagnosis">
+              <span *ngIf="!isEditingDiagnosis" class="info-value diagnosis-value">{{ selectedPatient?.diagnosis }}</span>
+              <button class="edit-button" (click)="isEditingDiagnosis ? saveDiagnosis() : startEditDiagnosis()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="patient-photo-container">
+          <div class="patient-photo-large">
+            <img src="assets/images/patient-profile.png" alt="Foto del paciente">
+          </div>
+          <button class="chat-button" (click)="openChat()">
+            <span>CHAT</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-button confirm" (click)="closeDetailsModal()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Medicamentos -->
+  <div class="modal-overlay" *ngIf="showMedicationModal">
+    <div class="medication-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Medicamentos</h2>
+        <button class="close-button" (click)="closeMedicationModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <div class="patient-info">
+          <div class="info-row">
+            <span class="info-label">Nombre completo:</span>
+            <span class="info-value">{{ patientToDelete?.name || 'Jane Doe' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">DNI:</span>
+            <span class="info-value">{{ patientToDelete?.dni || '73805906' }}</span>
+          </div>
+        </div>
+
+        <div class="medication-content">
+          <!-- Lista de medicamentos -->
+          <div class="medications-list">
+            <div class="medications-table">
+              <div class="table-header">
+                <div class="header-cell medication-name">Medicamento</div>
+                <div class="header-cell medication-instructions">Instrucciones</div>
+              </div>
+
+              <div class="table-body">
+                <div class="table-row" *ngFor="let medication of medications; let i = index"
+                     [ngClass]="{'selected': selectedMedicationIndex === i}"
+                     (click)="editMedication(i)">
+                  <div class="cell medication-name">{{ medication.name }}</div>
+                  <div class="cell medication-instructions">{{ medication.instructions }}</div>
+                </div>
+
+                <!-- Filas vacías para completar la tabla -->
+                <div class="table-row empty" *ngFor="let _ of [1,2,3,4,5,6,7,8].slice(medications.length)">
+                  <div class="cell medication-name"></div>
+                  <div class="cell medication-instructions"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-actions">
+              <button class="action-icon add" (click)="addMedication()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <button class="action-icon edit" [disabled]="selectedMedicationIndex === null" (click)="updateMedication()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="action-icon delete" [disabled]="selectedMedicationIndex === null" (click)="selectedMedicationIndex !== null && deleteMedication(selectedMedicationIndex)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulario para nuevo medicamento -->
+          <div class="new-medication">
+            <h3>Nuevo Medicamento</h3>
+
+            <div class="form-group">
+              <label>Medicamento</label>
+              <input type="text" class="form-control" [(ngModel)]="newMedication.name">
+            </div>
+
+            <div class="form-group">
+              <label>Instrucciones</label>
+              <textarea class="form-control" rows="5" [(ngModel)]="newMedication.instructions"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="modal-button confirm" (click)="confirmMedications()">Confirmar</button>
+              <button class="modal-button cancel" (click)="closeMedicationModal()">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
