@@ -1,26 +1,33 @@
 export class HealthTracking {
-  id?: number;
-  status: string;
-  description: string;
-  lastVisit: Date;
-  patientId: number;
-  doctorId: number;
+  id?: number
+  patientId: number
+  doctorId: number
+  type: string // 'alarm', 'reminder', 'medication', etc.
+  title: string
+  description?: string
+  scheduledTime: Date
+  isActive: boolean
+  createdAt?: Date
+  updatedAt?: Date
 
   constructor(
-    status: string,
-    description: string,
-    lastVisit: Date,
     patientId: number,
     doctorId: number,
-    id?: number
+    type: string,
+    title: string,
+    scheduledTime: Date,
+    isActive = true,
+    description?: string,
+    id?: number,
   ) {
-    this.id = id;
-    this.status = status;
-    this.description = description;
-    this.lastVisit = lastVisit;
-    this.patientId = patientId;
-    this.doctorId = doctorId;
+    this.id = id
+    this.patientId = patientId
+    this.doctorId = doctorId
+    this.type = type
+    this.title = title
+    this.description = description
+    this.scheduledTime = scheduledTime
+    this.isActive = isActive
   }
-
-
 }
+

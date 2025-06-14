@@ -50,7 +50,6 @@ import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar
     SignupPatientComponent,
     SignupDoctorComponent,
     SidenavComponent,
-    HomeDoctorComponent,
     HomePatientComponent,
     HeaderComponent,
   ],
@@ -79,7 +78,8 @@ import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar
     ReactiveFormsModule,
     MatSlideToggleModule,
     PatientsDoctorComponent,
-    CalendarDoctorComponent
+    CalendarDoctorComponent,
+    HomeDoctorComponent
   ],
   providers: [
     provideAnimationsAsync()

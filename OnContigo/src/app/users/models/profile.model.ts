@@ -1,16 +1,17 @@
 export class Profile {
-  id?: number;
-  firstName: string;
-  lastName: string;
-  city: string;
-  country: string;
-  birthDate: Date;
-  description?: string;
-  photo?: string;
-  experience?: number;
-  dni: string;
-  phone: string;
-  userId: number;
+  id?: number
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  birthDate: Date
+  description?: string
+  photo?: string
+  experience?: number
+  dni: string
+  phone: string
+  email?: string // Hacer email opcional
+  userId: number
 
   constructor(
     firstName: string,
@@ -23,20 +24,20 @@ export class Profile {
     userId: number,
     description?: string,
     photo?: string,
-    experience?: number
+    experience?: number,
+    email?: string, // Agregar email como parámetro opcional
   ) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.city = city;
-    this.country = country;
-    this.birthDate = birthDate;
-    this.dni = dni;
-    this.phone = phone;
-    this.userId = userId;
-    this.description = description;
-    this.photo = photo;
-    this.experience = experience;
+    this.firstName = firstName
+    this.lastName = lastName
+    this.city = city
+    this.country = country
+    this.birthDate = birthDate
+    this.dni = dni
+    this.phone = phone
+    this.userId = userId
+    this.description = description
+    this.photo = photo
+    this.experience = experience
+    this.email = email
   }
-
-
 }

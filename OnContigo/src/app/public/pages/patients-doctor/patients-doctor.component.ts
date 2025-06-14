@@ -1,21 +1,14 @@
 import { Component, type OnInit } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
+import {PatientDoctorService, PatientWithProfile} from '../../../shared/services/patient-doctor.service';
+import {PrescriptionService} from '../../../healthTracking/services/prescription.service';
+import {HealthTrackingService} from '../../../healthTracking/services/health-tracking.service';
+import {DoctorService} from '../../../users/services/doctor.service';
+import {UserApiService} from '../../../users/services/user.service';
+import {HealthTracking} from '../../../healthTracking/models/health-tracking.model';
+import {Prescription} from '../../../healthTracking/models/prescription.model';
 
-interface Patient {
-  id: number
-  dni: string
-  name: string
-  lastAppointment: string
-  nextAppointment: string
-  hasAlert: boolean
-  photoUrl: string
-  email?: string
-  phone?: string
-  diagnosis?: string
-}
-
-// Añadir la interfaz Medication después de la interfaz Patient
 interface Medication {
   id: number
   name: string
@@ -39,14 +32,17 @@ interface AlarmData {
   imports: [CommonModule, FormsModule],
 })
 export class PatientsDoctorComponent implements OnInit {
-  patients: Patient[] = []
+  patients: PatientWithProfile[] = []
   showAlarmModal = false
   showDeleteModal = false
   showDetailsModal = false
   showAddPatientModal = false
+  showMedicationModal = false
   selectedPatientId: number | null = null
   isEditingDiagnosis = false
   newPatientDni = ""
+  isLoading = true
+  doctorId = 0
 
   selectedAlarm: AlarmData = {
     patientId: 0,
@@ -57,11 +53,9 @@ export class PatientsDoctorComponent implements OnInit {
     note: "",
   }
 
-  patientToDelete: Patient | null = null
-  selectedPatient: Patient | null = null
+  patientToDelete: PatientWithProfile | null = null
+  selectedPatient: PatientWithProfile | null = null
 
-  // Añadir estas propiedades a la clase PatientsDoctorComponent
-  showMedicationModal = false
   medications: Medication[] = []
   newMedication: Medication = {
     id: 0,
@@ -70,127 +64,87 @@ export class PatientsDoctorComponent implements OnInit {
   }
   selectedMedicationIndex: number | null = null
 
-  constructor() {}
+  constructor(
+    private patientDoctorService: PatientDoctorService,
+    private prescriptionService: PrescriptionService,
+    private healthTrackingService: HealthTrackingService,
+    private doctorService: DoctorService,
+    private userApiService: UserApiService,
+  ) {}
 
   ngOnInit(): void {
-    // Datos de ejemplo - en el futuro se obtendrán de la API
+    this.loadDoctorData()
+  }
+
+  private loadDoctorData(): void {
+    this.doctorId = this.doctorService.getDoctorId()
+
+    if (this.doctorId) {
+      this.loadPatients()
+    } else {
+      // Si no hay doctorId en localStorage, obtenerlo del usuario actual
+      const userId = this.userApiService.getUserId()
+      this.doctorService.getAll().subscribe({
+        next: (doctors) => {
+          const doctor = doctors.find((d) => d.userId === userId)
+          if (doctor) {
+            this.doctorId = doctor.id!
+            this.doctorService.setDoctorId(this.doctorId)
+            this.loadPatients()
+          }
+        },
+        error: (error) => {
+          console.error("Error loading doctor:", error)
+          this.isLoading = false
+        },
+      })
+    }
+  }
+
+  private loadPatients(): void {
+    this.patientDoctorService.getPatientsByDoctorId(this.doctorId).subscribe({
+      next: (patients) => {
+        this.patients = patients
+        this.isLoading = false
+      },
+      error: (error) => {
+        console.error("Error loading patients:", error)
+        this.isLoading = false
+        // Fallback a datos de ejemplo si hay error
+        this.loadFallbackData()
+      },
+    })
+  }
+
+  private loadFallbackData(): void {
+    // Datos de ejemplo como fallback
     this.patients = [
       {
-        id: 1,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
+        patient: { id: 1, userId: 1 },
+        profile: {
+          id: 1,
+          firstName: "John",
+          lastName: "Doe",
+          dni: "13423432",
+          phone: "999 888 777",
+          email: "john.doe@gmail.com",
+          city: "Lima",
+          country: "Peru",
+          birthDate: new Date("1990-01-01"),
+          userId: 1,
+        },
+        lastAppointment: new Date("2024-01-15"),
+        nextAppointment: new Date("2024-02-15"),
         hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de pulmón",
-      },
-      {
-        id: 2,
-        dni: "73805906",
-        name: "Jane Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "example@gmail.com",
-        phone: "999 999 999",
-        diagnosis: "Disease",
-      },
-      {
-        id: 3,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de mama",
-      },
-      {
-        id: 4,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de colon",
-      },
-      {
-        id: 5,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de próstata",
-      },
-      {
-        id: 6,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de piel",
-      },
-      {
-        id: 7,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de estómago",
-      },
-      {
-        id: 8,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de páncreas",
-      },
-      {
-        id: 9,
-        dni: "13423432",
-        name: "John Doe",
-        lastAppointment: "dd/mm/yy",
-        nextAppointment: "dd/mm/yy",
-        hasAlert: true,
-        photoUrl: "",
-        email: "john.doe@gmail.com",
-        phone: "999 888 777",
-        diagnosis: "Cáncer de hígado",
       },
     ]
   }
 
   selectPatient(patientId: number): void {
     if (this.selectedPatientId === patientId) {
-      this.selectedPatientId = null // Deseleccionar si ya estaba seleccionado
+      this.selectedPatientId = null
     } else {
-      this.selectedPatientId = patientId // Seleccionar nuevo paciente
+      this.selectedPatientId = patientId
     }
   }
 
@@ -213,26 +167,27 @@ export class PatientsDoctorComponent implements OnInit {
       return
     }
 
-    console.log("Agregando paciente con DNI:", this.newPatientDni)
-    // Aquí implementarías la lógica para agregar el paciente a la base de datos
-
-    // Simulamos la adición de un nuevo paciente a la lista local
-    const newId = Math.max(...this.patients.map((p) => p.id)) + 1
-    const newPatient: Patient = {
-      id: newId,
-      dni: this.newPatientDni,
-      name: "Nuevo Paciente",
-      lastAppointment: "dd/mm/yy",
-      nextAppointment: "dd/mm/yy",
-      hasAlert: false,
-      photoUrl: "",
-      email: "",
-      phone: "",
-      diagnosis: "",
-    }
-
-    this.patients.push(newPatient)
-    this.showAddPatientModal = false
+    // Buscar paciente por DNI
+    this.patientDoctorService.searchPatientByDni(this.newPatientDni).subscribe({
+      next: (patientWithProfile) => {
+        // Asignar el paciente al doctor actual
+        this.patientDoctorService.assignPatientToDoctor(patientWithProfile.patient.id!, this.doctorId).subscribe({
+          next: () => {
+            this.patients.push(patientWithProfile)
+            this.showAddPatientModal = false
+            alert("Paciente agregado exitosamente")
+          },
+          error: (error) => {
+            console.error("Error assigning patient to doctor:", error)
+            alert("Error al asignar el paciente")
+          },
+        })
+      },
+      error: (error) => {
+        console.error("Error searching patient:", error)
+        alert("No se encontró un paciente con ese DNI")
+      },
+    })
   }
 
   viewDetails(): void {
@@ -241,7 +196,7 @@ export class PatientsDoctorComponent implements OnInit {
       return
     }
 
-    const patient = this.patients.find((p) => p.id === this.selectedPatientId)
+    const patient = this.patients.find((p) => p.patient.id === this.selectedPatientId)
     if (patient) {
       this.selectedPatient = patient
       this.showDetailsModal = true
@@ -259,17 +214,17 @@ export class PatientsDoctorComponent implements OnInit {
   }
 
   saveDiagnosis(): void {
+    if (!this.selectedPatient?.profile) return
     this.isEditingDiagnosis = false
-    // Aquí implementarías la lógica para guardar el diagnóstico en la base de datos
-    console.log("Diagnóstico guardado:", this.selectedPatient?.diagnosis)
+    // Aquí implementarías la lógica para guardar el diagnóstico
+    console.log("Diagnóstico guardado")
   }
 
   openChat(): void {
-    console.log("Abriendo chat con el paciente:", this.selectedPatient?.name)
-    // Implementar lógica para abrir el chat
+    if (!this.selectedPatient?.profile) return
+    console.log("Abriendo chat con el paciente:", this.selectedPatient.profile.firstName)
   }
 
-  // Modificar el método prescribeMedication para que abra el modal
   prescribeMedication(): void {
     this.openMedicationModal()
   }
@@ -280,7 +235,7 @@ export class PatientsDoctorComponent implements OnInit {
       return
     }
 
-    const patient = this.patients.find((p) => p.id === this.selectedPatientId)
+    const patient = this.patients.find((p) => p.patient.id === this.selectedPatientId)
     if (patient) {
       this.patientToDelete = patient
       this.showDeleteModal = true
@@ -294,22 +249,20 @@ export class PatientsDoctorComponent implements OnInit {
 
   confirmDeletePatient(): void {
     if (this.patientToDelete) {
+      // Aquí implementarías la lógica para desasignar el paciente del doctor
       console.log("Eliminando paciente:", this.patientToDelete)
-      // Aquí implementarías la lógica para eliminar el paciente de la base de datos
-
-      // Eliminar de la lista local
-      this.patients = this.patients.filter((p) => p.id !== this.patientToDelete?.id)
+      this.patients = this.patients.filter((p) => p.patient.id !== this.patientToDelete?.patient.id)
       this.selectedPatientId = null
       this.showDeleteModal = false
       this.patientToDelete = null
     }
   }
 
-  openAlarmModal(patient: Patient): void {
+  openAlarmModal(patient: PatientWithProfile): void {
     this.selectedAlarm = {
-      patientId: patient.id,
-      patientName: patient.name,
-      patientDni: patient.dni,
+      patientId: patient.patient.id!,
+      patientName: `${patient.profile.firstName} ${patient.profile.lastName}`,
+      patientDni: patient.profile.dni,
       hours: 13,
       minutes: 30,
       note: "",
@@ -322,9 +275,32 @@ export class PatientsDoctorComponent implements OnInit {
   }
 
   saveAlarm(): void {
-    console.log("Guardando alarma:", this.selectedAlarm)
-    // Aquí implementarías la lógica para guardar la alarma en la base de datos
-    this.showAlarmModal = false
+    const healthTracking = new HealthTracking(
+      this.selectedAlarm.patientId,
+      this.doctorId,
+      "alarm",
+      "Recordatorio de medicamento",
+      new Date(),
+      true,
+      this.selectedAlarm.note,
+    )
+
+    // Configurar la hora de la alarma
+    const alarmDate = new Date()
+    alarmDate.setHours(this.selectedAlarm.hours, this.selectedAlarm.minutes, 0, 0)
+    healthTracking.scheduledTime = alarmDate
+
+    this.healthTrackingService.create(healthTracking).subscribe({
+      next: (response) => {
+        console.log("Alarma guardada:", response)
+        this.showAlarmModal = false
+        alert("Alarma configurada exitosamente")
+      },
+      error: (error) => {
+        console.error("Error saving alarm:", error)
+        alert("Error al configurar la alarma")
+      },
+    })
   }
 
   incrementHours(): void {
@@ -343,22 +319,39 @@ export class PatientsDoctorComponent implements OnInit {
     this.selectedAlarm.minutes = (this.selectedAlarm.minutes - 1 + 60) % 60
   }
 
-  // Añadir estos métodos a la clase PatientsDoctorComponent
   openMedicationModal(): void {
     if (!this.selectedPatientId) {
       alert("Por favor, seleccione un paciente primero")
       return
     }
 
-    const patient = this.patients.find((p) => p.id === this.selectedPatientId)
+    const patient = this.patients.find((p) => p.patient.id === this.selectedPatientId)
     if (patient) {
-      // Cargar medicamentos existentes (simulado)
-      this.medications = [
-        { id: 1, name: "Paracetamol", instructions: "Cada 8 (hrs/Día) por 7" },
-        { id: 2, name: "Ibuprofeno", instructions: "Cada 12 (hrs/Día) por 5" },
-      ]
+      this.selectedPatient = patient
+      this.loadPatientMedications()
       this.resetNewMedication()
       this.showMedicationModal = true
+    }
+  }
+
+  private loadPatientMedications(): void {
+    if (this.selectedPatient) {
+      this.prescriptionService.getAll().subscribe({
+        next: (prescriptions) => {
+          // Filtrar prescripciones del paciente actual
+          const patientPrescriptions = prescriptions.filter((p) => p.patientId === this.selectedPatient!.patient.id)
+
+          this.medications = patientPrescriptions.map((prescription, index) => ({
+            id: prescription.id || index + 1,
+            name: prescription.medicationName,
+            instructions: prescription.instructions,
+          }))
+        },
+        error: (error) => {
+          console.error("Error loading medications:", error)
+          this.medications = []
+        },
+      })
     }
   }
 
@@ -382,15 +375,31 @@ export class PatientsDoctorComponent implements OnInit {
       return
     }
 
-    const newId = this.medications.length > 0 ? Math.max(...this.medications.map((m) => m.id)) + 1 : 1
+    const prescription = new Prescription(
+      this.selectedPatient!.patient.id!,
+      this.doctorId,
+      this.newMedication.name,
+      this.newMedication.instructions,
+    )
 
-    this.medications.push({
-      id: newId,
-      name: this.newMedication.name,
-      instructions: this.newMedication.instructions,
+    this.prescriptionService.create(prescription).subscribe({
+      next: (response) => {
+        const newId = this.medications.length > 0 ? Math.max(...this.medications.map((m) => m.id)) + 1 : 1
+
+        this.medications.push({
+          id: newId,
+          name: this.newMedication.name,
+          instructions: this.newMedication.instructions,
+        })
+
+        this.resetNewMedication()
+        alert("Medicamento agregado exitosamente")
+      },
+      error: (error) => {
+        console.error("Error adding medication:", error)
+        alert("Error al agregar el medicamento")
+      },
     })
-
-    this.resetNewMedication()
   }
 
   editMedication(index: number): void {
@@ -400,23 +409,67 @@ export class PatientsDoctorComponent implements OnInit {
 
   updateMedication(): void {
     if (this.selectedMedicationIndex !== null) {
-      this.medications[this.selectedMedicationIndex] = { ...this.newMedication }
-      this.resetNewMedication()
-      this.selectedMedicationIndex = null
+      const medication = this.medications[this.selectedMedicationIndex]
+
+      const prescription = new Prescription(
+        this.selectedPatient!.patient.id!,
+        this.doctorId,
+        this.newMedication.name,
+        this.newMedication.instructions,
+      )
+
+      this.prescriptionService.update(medication.id, prescription).subscribe({
+        next: (response) => {
+          this.medications[this.selectedMedicationIndex!] = { ...this.newMedication }
+          this.resetNewMedication()
+          this.selectedMedicationIndex = null
+          alert("Medicamento actualizado exitosamente")
+        },
+        error: (error) => {
+          console.error("Error updating medication:", error)
+          alert("Error al actualizar el medicamento")
+        },
+      })
     }
   }
 
   deleteMedication(index: number): void {
-    this.medications.splice(index, 1)
-    if (this.selectedMedicationIndex === index) {
-      this.resetNewMedication()
-      this.selectedMedicationIndex = null
-    }
+    const medication = this.medications[index]
+
+    this.prescriptionService.delete(medication.id).subscribe({
+      next: () => {
+        this.medications.splice(index, 1)
+        if (this.selectedMedicationIndex === index) {
+          this.resetNewMedication()
+          this.selectedMedicationIndex = null
+        }
+        alert("Medicamento eliminado exitosamente")
+      },
+      error: (error) => {
+        console.error("Error deleting medication:", error)
+        alert("Error al eliminar el medicamento")
+      },
+    })
   }
 
   confirmMedications(): void {
-    console.log("Medicamentos recetados:", this.medications)
-    // Aquí implementarías la lógica para guardar los medicamentos en la base de datos
+    console.log("Medicamentos confirmados:", this.medications)
     this.showMedicationModal = false
+    alert("Prescripciones guardadas exitosamente")
+  }
+
+  // Métodos auxiliares para el template
+  getPatientFullName(patient: PatientWithProfile): string {
+    if (!patient?.profile) return "N/A"
+    return `${patient.profile.firstName || ""} ${patient.profile.lastName || ""}`.trim()
+  }
+
+  formatDate(date: Date | undefined): string {
+    if (!date) return "dd/mm/yy"
+    return new Date(date).toLocaleDateString("es-PE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+    })
   }
 }

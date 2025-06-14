@@ -11,91 +11,108 @@
   </header>
 
   <div class="content">
-    <div class="table-container">
-      <table class="patients-table">
-        <thead>
-        <tr>
-          <th>Foto</th>
-          <th>DNI</th>
-          <th>Nombre completo</th>
-          <th>Últ. Cita</th>
-          <th>Prox. Cita</th>
-          <th>Alarma</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let patient of patients; let i = index"
-            [ngClass]="{'odd-row': i % 2 !== 0, 'selected-row': isPatientSelected(patient.id)}"
-            (click)="selectPatient(patient.id)">
-          <td class="photo-cell">
-            <div class="patient-photo">
-              <img *ngIf="patient.photoUrl" [src]="patient.photoUrl" alt="Foto de paciente">
-            </div>
-          </td>
-          <td>{{ patient.dni }}</td>
-          <td>{{ patient.name }}</td>
-          <td>{{ patient.lastAppointment }}</td>
-          <td>{{ patient.nextAppointment }}</td>
-          <td class="alert-cell">
-            <button class="alert-icon" *ngIf="patient.hasAlert" (click)="openAlarmModal(patient); $event.stopPropagation()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando pacientes...</p>
     </div>
 
-    <div class="actions-panel">
-      <button class="action-button add-button" (click)="openAddPatientModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        Agregar Paciente
-      </button>
+    <!-- Content when loaded -->
+    <div *ngIf="!isLoading" class="main-content">
+      <div class="table-container">
+        <table class="patients-table">
+          <thead>
+          <tr>
+            <th>Foto</th>
+            <th>DNI</th>
+            <th>Nombre completo</th>
+            <th>Últ. Cita</th>
+            <th>Prox. Cita</th>
+            <th>Alarma</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let patient of patients; let i = index"
+              [ngClass]="{'odd-row': i % 2 !== 0, 'selected-row': isPatientSelected(patient.patient.id!)}"
+              (click)="selectPatient(patient.patient.id!)">
+            <td class="photo-cell">
+              <div class="patient-photo">
+                <img *ngIf="patient.profile.photo" [src]="patient.profile.photo" alt="Foto de paciente">
+              </div>
+            </td>
+            <td>{{ patient.profile.dni }}</td>
+            <td>{{ getPatientFullName(patient) }}</td>
+            <td>{{ formatDate(patient.lastAppointment) }}</td>
+            <td>{{ formatDate(patient.nextAppointment) }}</td>
+            <td class="alert-cell">
+              <button class="alert-icon" *ngIf="patient.hasAlert" (click)="openAlarmModal(patient); $event.stopPropagation()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-      <button class="action-button details-button" (click)="viewDetails()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="21" y1="10" x2="3" y2="10"></line>
-          <line x1="21" y1="6" x2="3" y2="6"></line>
-          <line x1="21" y1="14" x2="3" y2="14"></line>
-          <line x1="21" y1="18" x2="3" y2="18"></line>
-        </svg>
-        Ver detalles
-      </button>
+        <!-- Empty state -->
+        <div *ngIf="patients.length === 0" class="empty-state">
+          <p>No hay pacientes asignados</p>
+          <button class="action-button add-button" (click)="openAddPatientModal()">
+            Agregar primer paciente
+          </button>
+        </div>
+      </div>
 
-      <button class="action-button prescribe-button" (click)="prescribeMedication()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
-          <line x1="9" y1="9" x2="15" y2="9"></line>
-          <line x1="9" y1="12" x2="15" y2="12"></line>
-          <line x1="9" y1="15" x2="13" y2="15"></line>
-        </svg>
-        Recetar Medicamento
-      </button>
+      <div class="actions-panel">
+        <button class="action-button add-button" (click)="openAddPatientModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Agregar Paciente
+        </button>
 
-      <button class="action-button treatments-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="21" y1="10" x2="3" y2="10"></line>
-          <line x1="21" y1="6" x2="3" y2="6"></line>
-          <line x1="21" y1="14" x2="3" y2="14"></line>
-          <line x1="21" y1="18" x2="3" y2="18"></line>
-        </svg>
-        Sus Tratamientos
-      </button>
+        <button class="action-button details-button" (click)="viewDetails()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+          Ver detalles
+        </button>
 
-      <button class="action-button delete-button" (click)="openDeleteModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="15" y1="9" x2="9" y2="15"></line>
-          <line x1="9" y1="9" x2="15" y2="15"></line>
-        </svg>
-        Eliminar Paciente
-      </button>
+        <button class="action-button prescribe-button" (click)="prescribeMedication()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+            <line x1="9" y1="9" x2="15" y2="9"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+            <line x1="9" y1="15" x2="13" y2="15"></line>
+          </svg>
+          Recetar Medicamento
+        </button>
+
+        <button class="action-button treatments-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+          Sus Tratamientos
+        </button>
+
+        <button class="action-button delete-button" (click)="openDeleteModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+          Eliminar Paciente
+        </button>
+      </div>
     </div>
   </div>
 
@@ -199,11 +216,11 @@
         <div class="patient-info">
           <div class="info-row">
             <span class="info-label">Nombre completo:</span>
-            <span class="info-value">{{ patientToDelete?.name }}</span>
+            <span class="info-value">{{ getPatientFullName(patientToDelete!) }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">DNI:</span>
-            <span class="info-value">{{ patientToDelete?.dni }}</span>
+            <span class="info-value">{{ patientToDelete?.profile?.dni || 'N/A' }}</span>
           </div>
         </div>
       </div>
@@ -224,33 +241,33 @@
         <div class="patient-details">
           <div class="info-row">
             <span class="info-label">Nombre completo:</span>
-            <span class="info-value">{{ selectedPatient?.name }}</span>
+            <span class="info-value">{{ getPatientFullName(selectedPatient!) }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">DNI:</span>
-            <span class="info-value">{{ selectedPatient?.dni }}</span>
+            <span class="info-value">{{ selectedPatient?.profile?.dni || 'N/A' }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Última Cita:</span>
-            <span class="info-value">{{ selectedPatient?.lastAppointment }}</span>
+            <span class="info-value">{{ formatDate(selectedPatient?.lastAppointment) }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Próxima Cita:</span>
-            <span class="info-value">{{ selectedPatient?.nextAppointment }}</span>
+            <span class="info-value">{{ formatDate(selectedPatient?.nextAppointment) }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Email:</span>
-            <span class="info-value">{{ selectedPatient?.email }}</span>
+            <span class="info-value">{{ selectedPatient?.profile?.email || 'N/A' }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Teléfono:</span>
-            <span class="info-value">{{ selectedPatient?.phone }}</span>
+            <span class="info-value">{{ selectedPatient?.profile?.phone || 'N/A' }}</span>
           </div>
           <div class="info-row diagnosis-row">
             <span class="info-label">Diagnóstico:</span>
             <div class="diagnosis-container">
-              <input *ngIf="isEditingDiagnosis" type="text" class="diagnosis-input" [(ngModel)]="selectedPatient!.diagnosis">
-              <span *ngIf="!isEditingDiagnosis" class="info-value diagnosis-value">{{ selectedPatient?.diagnosis }}</span>
+              <input *ngIf="isEditingDiagnosis" type="text" class="diagnosis-input" [(ngModel)]="selectedPatient!.profile.description">
+              <span *ngIf="!isEditingDiagnosis" class="info-value diagnosis-value">{{ selectedPatient?.profile?.description || 'Sin diagnóstico' }}</span>
               <button class="edit-button" (click)="isEditingDiagnosis ? saveDiagnosis() : startEditDiagnosis()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -263,7 +280,7 @@
 
         <div class="patient-photo-container">
           <div class="patient-photo-large">
-            <img src="assets/images/patient-profile.png" alt="Foto del paciente">
+            <img [src]="selectedPatient?.profile?.photo || 'assets/images/patient-profile.png'" alt="Foto del paciente">
           </div>
           <button class="chat-button" (click)="openChat()">
             <span>CHAT</span>
@@ -297,11 +314,11 @@
         <div class="patient-info">
           <div class="info-row">
             <span class="info-label">Nombre completo:</span>
-            <span class="info-value">{{ patientToDelete?.name || 'Jane Doe' }}</span>
+            <span class="info-value">{{ getPatientFullName(selectedPatient!) }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">DNI:</span>
-            <span class="info-value">{{ patientToDelete?.dni || '73805906' }}</span>
+            <span class="info-value">{{ selectedPatient?.profile?.dni || 'N/A' }}</span>
           </div>
         </div>
 

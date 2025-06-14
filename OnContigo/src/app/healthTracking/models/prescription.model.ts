@@ -1,21 +1,33 @@
 export class Prescription {
-  id?: number;
-  medicationName: string;
-  dosage: string;
-  patientId: number;
-  doctorId: number;
+  id?: number
+  patientId: number
+  doctorId: number
+  medicationName: string
+  instructions: string
+  dosage?: string
+  frequency?: string
+  duration?: string
+  createdAt?: Date
+  updatedAt?: Date
 
   constructor(
-    medicationName: string,
-    dosage: string,
     patientId: number,
-    doctorId: number
+    doctorId: number,
+    medicationName: string,
+    instructions: string,
+    dosage?: string,
+    frequency?: string,
+    duration?: string,
+    id?: number,
   ) {
-    this.medicationName = medicationName;
-    this.dosage = dosage;
-    this.patientId = patientId;
-    this.doctorId = doctorId;
+    this.id = id
+    this.patientId = patientId
+    this.doctorId = doctorId
+    this.medicationName = medicationName
+    this.instructions = instructions
+    this.dosage = dosage
+    this.frequency = frequency
+    this.duration = duration
   }
-
-
 }
+
