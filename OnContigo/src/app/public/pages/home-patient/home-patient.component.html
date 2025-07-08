@@ -1,1 +1,176 @@
-<p>home-patient works!</p>
+<div class="patient-dashboard-container">
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
+    </div>
+    <div class="profile-container">
+      <img [src]="patientProfileImage" alt="Perfil Paciente" class="profile-image">
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="nav-menu">
+        <ul>
+          <li class="nav-item active">
+            <a routerLink="/patient/home" class="nav-link">INICIO</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/patient/calendar" class="nav-link">CALENDARIO</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/patient/my-doctor" class="nav-link">MI DOCTOR</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/patient/treatments" class="nav-link">TRATAMIENTOS</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/patient/profile" class="nav-link">PERFIL</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="welcome-section">
+        <h1>¡Hola, {{ patientName }}!</h1>
+        <p>Bienvenido a tu portal de salud OnContigo</p>
+      </div>
+
+      <!-- Métricas de salud rápidas -->
+      <div class="health-metrics">
+        <div class="metric-card">
+          <div class="metric-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 2v4"></path>
+              <path d="M16 2v4"></path>
+              <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+              <path d="M3 10h18"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Última Visita</h3>
+            <p>{{ healthMetrics.lastVisit }}</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 6v6l4 2"></path>
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Próxima Cita</h3>
+            <p>{{ healthMetrics.nextAppointment }}</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Tratamientos Activos</h3>
+            <p>{{ healthMetrics.activeTreatments }}</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Medicamentos</h3>
+            <p>{{ healthMetrics.medications }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Próximas citas -->
+      <div class="upcoming-appointments">
+        <h2>Próximas Citas</h2>
+        <div class="appointments-list">
+          <div class="appointment-card" *ngFor="let appointment of upcomingAppointments">
+            <div class="appointment-date">
+              <div class="date-day">{{ appointment.date.split(' ')[0] }}</div>
+              <div class="date-month">{{ appointment.date.split(' ')[1] }}</div>
+            </div>
+            <div class="appointment-details">
+              <h3>{{ appointment.doctorName }}</h3>
+              <p class="appointment-type">{{ appointment.type }}</p>
+              <p class="appointment-time">{{ appointment.time }}</p>
+            </div>
+            <div class="appointment-actions">
+              <button class="btn-secondary">Ver Detalles</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones rápidas -->
+      <div class="quick-actions">
+        <h2>Acceso Rápido</h2>
+        <div class="actions-grid">
+          <div class="action-card" (click)="navigateToCalendar()">
+            <div class="action-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 2v4"></path>
+                <path d="M16 2v4"></path>
+                <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                <path d="M3 10h18"></path>
+              </svg>
+            </div>
+            <h3>Calendario</h3>
+            <p>Ver citas programadas</p>
+          </div>
+
+          <div class="action-card" (click)="navigateToMyDoctor()">
+            <div class="action-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </div>
+            <h3>Mi Doctor</h3>
+            <p>Contactar especialista</p>
+          </div>
+
+          <div class="action-card" (click)="navigateToTreatments()">
+            <div class="action-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"></path>
+              </svg>
+            </div>
+            <h3>Tratamientos</h3>
+            <p>Seguir progreso</p>
+          </div>
+
+          <div class="action-card" (click)="navigateToMedications()">
+            <div class="action-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+              </svg>
+            </div>
+            <h3>Medicamentos</h3>
+            <p>Gestionar recetas</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

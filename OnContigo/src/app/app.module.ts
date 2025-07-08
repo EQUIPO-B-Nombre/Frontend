@@ -37,6 +37,9 @@ import { HomePatientComponent } from './public/pages/home-patient/home-patient.c
 import { HeaderComponent } from './public/components/header/header.component';
 import { PatientsDoctorComponent } from './public/pages/patients-doctor/patients-doctor.component';
 import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar-doctor.component';
+import { CalendarPatientComponent } from './public/pages/calendar-patient/calendar-patient.component';
+import { PatientTreatmentsComponent } from './public/components/patient-treatments/patient-treatments.component';
+import { DoctorProfileComponent } from './public/pages/doctor-profile/doctor-profile.component';
 
 
 @NgModule({
@@ -53,6 +56,8 @@ import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar
     HomeDoctorComponent,
     HomePatientComponent,
     HeaderComponent,
+    DoctorProfileComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -79,7 +84,9 @@ import { CalendarDoctorComponent } from './public/pages/calendar-doctor/calendar
     ReactiveFormsModule,
     MatSlideToggleModule,
     PatientsDoctorComponent,
-    CalendarDoctorComponent
+    CalendarDoctorComponent,
+    CalendarPatientComponent,
+    PatientTreatmentsComponent
   ],
   providers: [
     provideAnimationsAsync()

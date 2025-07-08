@@ -1,0 +1,325 @@
+<div class="profile-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
+    </div>
+    <div class="navigation">
+      <a routerLink="/doctor/home" class="nav-link">Inicio</a>
+      <a routerLink="/doctor/patients" class="nav-link">Pacientes</a>
+      <a routerLink="/doctor/calendar" class="nav-link">Calendario</a>
+      <a routerLink="/doctor/profile" class="nav-link active">Perfil</a>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Sidebar con información básica -->
+    <div class="profile-sidebar">
+      <div class="profile-card">
+        <!-- Foto de perfil -->
+        <div class="profile-image-section">
+          <div class="profile-image-container">
+            <img
+              [src]="imagePreview || 'assets/images/default-doctor.png'"
+              alt="Foto de perfil"
+              class="profile-image">
+
+            <div class="image-overlay" *ngIf="isEditing">
+              <input
+                #fileInput
+                type="file"
+                accept="image/*"
+                (change)="onImagePicked($event)"
+                style="display: none;">
+              <button
+                class="change-image-btn"
+                (click)="fileInput.click()"
+                type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </button>
+              <button
+                class="remove-image-btn"
+                (click)="removeImage()"
+                *ngIf="imagePreview"
+                type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información básica -->
+        <div class="profile-basic-info" *ngIf="profile">
+          <h2>Dr. {{ profile.firstName }} {{ profile.lastName }}</h2>
+          <p class="specialization">{{ doctorStats.specializations.join(', ') }}</p>
+          <p class="experience">{{ doctorStats.yearsExperience }} años de experiencia</p>
+
+          <!-- Rating -->
+          <div class="rating-section">
+            <div class="stars">
+              <span
+                *ngFor="let filled of getStarArray(doctorStats.rating)"
+                class="star"
+                [ngClass]="{ 'filled': filled }">
+                ★
+              </span>
+            </div>
+            <span class="rating-text">{{ doctorStats.rating }} ({{ doctorStats.totalReviews }} reseñas)</span>
+          </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div class="quick-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ doctorStats.totalPatients }}</span>
+            <span class="stat-label">Pacientes Totales</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ doctorStats.activePatients }}</span>
+            <span class="stat-label">Pacientes Activos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ doctorStats.completedTreatments }}</span>
+            <span class="stat-label">Tratamientos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ doctorStats.upcomingAppointments }}</span>
+            <span class="stat-label">Próximas Citas</span>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="profile-actions">
+          <button
+            class="btn-primary"
+            (click)="toggleEdit()"
+            *ngIf="!isEditing">
+            Editar Perfil
+          </button>
+          <button
+            class="btn-secondary"
+            (click)="logout()">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido principal del perfil -->
+    <div class="profile-main">
+      <div class="profile-form-card">
+        <div class="card-header">
+          <h3>Información Personal</h3>
+          <div class="header-actions" *ngIf="isEditing">
+            <button class="btn-success" (click)="saveProfile()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Guardar
+            </button>
+            <button class="btn-outline" (click)="toggleEdit()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              Cancelar
+            </button>
+          </div>
+        </div>
+
+        <form [formGroup]="profileForm" class="profile-form">
+          <!-- Información Personal -->
+          <div class="form-section">
+            <h4>Datos Personales</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Nombre *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  formControlName="firstName"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+                <div class="error-message" *ngIf="profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched">
+                  El nombre es obligatorio
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Apellido *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  formControlName="lastName"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+                <div class="error-message" *ngIf="profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched">
+                  El apellido es obligatorio
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dni">DNI *</label>
+                <input
+                  type="text"
+                  id="dni"
+                  formControlName="dni"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+              </div>
+              <div class="form-group">
+                <label for="birthDate">Fecha de Nacimiento *</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  formControlName="birthDate"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+                <div class="info-text" *ngIf="profile && !isEditing">
+                  Edad: {{ calculateAge(profile.birthDate) }} años
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Información de Contacto -->
+          <div class="form-section">
+            <h4>Contacto</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Teléfono *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  formControlName="phone"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Ciudad *</label>
+                <input
+                  type="text"
+                  id="city"
+                  formControlName="city"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+              </div>
+              <div class="form-group">
+                <label for="country">País *</label>
+                <input
+                  type="text"
+                  id="country"
+                  formControlName="country"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+              </div>
+            </div>
+          </div>
+
+          <!-- Información Profesional -->
+          <div class="form-section">
+            <h4>Información Profesional</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="experience">Años de Experiencia *</label>
+                <input
+                  type="number"
+                  id="experience"
+                  formControlName="experience"
+                  min="0"
+                  [readonly]="!isEditing"
+                  [class.readonly]="!isEditing">
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="description">Descripción Profesional</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                rows="4"
+                placeholder="Describe tu experiencia, especialidades y enfoque profesional..."
+                [readonly]="!isEditing"
+                [class.readonly]="!isEditing">
+              </textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Estadísticas detalladas -->
+      <div class="stats-card">
+        <h3>Estadísticas del Perfil</h3>
+        <div class="detailed-stats">
+          <div class="stat-card">
+            <div class="stat-icon patients">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>{{ doctorStats.totalPatients }}</h4>
+              <p>Total de Pacientes</p>
+              <span class="stat-change positive">+5 este mes</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon treatments">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"></path>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>{{ doctorStats.completedTreatments }}</h4>
+              <p>Tratamientos Completados</p>
+              <span class="stat-change positive">+12 este mes</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon calendar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>{{ doctorStats.upcomingAppointments }}</h4>
+              <p>Próximas Citas</p>
+              <span class="stat-change neutral">Esta semana</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon rating">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>{{ doctorStats.rating }}/5</h4>
+              <p>Calificación Promedio</p>
+              <span class="stat-change positive">{{ doctorStats.totalReviews }} reseñas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,4 @@
 <div class="dashboard-container">
-
   <header class="header">
     <div class="logo-container">
       <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
@@ -23,32 +22,166 @@
           <li class="nav-item">
             <a routerLink="/doctor/calendar" class="nav-link">CALENDARIO</a>
           </li>
+          <li class="nav-item">
+            <a routerLink="/doctor/profile" class="nav-link">PERFIL</a>
+          </li>
         </ul>
       </nav>
     </aside>
 
     <main class="main-content">
       <div class="welcome-message">
-        <h2>Bienvenida, {{ doctorName }}.</h2>
-        <h3>¡Bienvenida a tu Portal de Oncontigo!</h3>
+        <h1>Bienvenido, {{ doctorName }}</h1>
+        <p>¡Bienvenido a tu Portal de OnContigo!</p>
       </div>
 
-      <div class="cards-container">
-        <div class="card">
-          <div class="card-image">
-            <img src="/assets/images/patient-list-icon.png" alt="Lista de Pacientes">
+      <!-- Métricas del Dashboard -->
+      <div class="dashboard-metrics">
+        <div class="metric-card">
+          <div class="metric-icon patients-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
           </div>
-          <button class="card-button" routerLink="/doctor/patients">LISTA PACIENTES</button>
+          <div class="metric-content">
+            <h3>Total Pacientes</h3>
+            <span class="metric-number">{{ dashboardMetrics.totalPatients }}</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-image">
-            <img src="/assets/images/calendar-icon.png" alt="Calendario">
+        <div class="metric-card">
+          <div class="metric-icon appointments-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
           </div>
-          <button class="card-button" routerLink="/doctor/calendary">CALENDARIO</button>
+          <div class="metric-content">
+            <h3>Citas Hoy</h3>
+            <span class="metric-number">{{ dashboardMetrics.todayAppointments }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon alerts-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Alertas Pendientes</h3>
+            <span class="metric-number">{{ dashboardMetrics.pendingAlerts }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon treatments-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <h3>Tratamientos Activos</h3>
+            <span class="metric-number">{{ dashboardMetrics.activeTreatments }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <!-- Citas de Hoy -->
+        <div class="today-appointments">
+          <div class="section-header">
+            <h2>Citas de Hoy</h2>
+            <button class="view-all-btn" (click)="navigateToCalendar()">Ver Todo</button>
+          </div>
+
+          <div class="appointments-list">
+            <div class="appointment-card" *ngFor="let appointment of todayAppointments">
+              <div class="appointment-time">
+                <span class="time">{{ appointment.time }}</span>
+              </div>
+              <div class="appointment-details">
+                <h4>{{ appointment.patientName }}</h4>
+                <p class="appointment-type">{{ appointment.type }}</p>
+                <span class="appointment-status" [ngClass]="getStatusClass(appointment.status)">
+                  {{ appointment.status | titlecase }}
+                </span>
+              </div>
+              <div class="appointment-actions">
+                <button class="btn-primary-sm" (click)="viewAppointmentDetails(appointment.id)">
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alertas Recientes -->
+        <div class="recent-alerts">
+          <div class="section-header">
+            <h2>Alertas Recientes</h2>
+            <button class="view-all-btn">Ver Todas</button>
+          </div>
+
+          <div class="alerts-list">
+            <div class="alert-card" *ngFor="let alert of recentAlerts">
+              <div class="alert-priority" [ngClass]="getPriorityClass(alert.priority)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+              <div class="alert-content">
+                <h4>{{ alert.patientName }}</h4>
+                <p>{{ alert.message }}</p>
+                <span class="alert-time">{{ alert.time }}</span>
+              </div>
+              <div class="alert-actions">
+                <button class="btn-secondary-sm" (click)="handleAlert(alert.id)">
+                  Revisar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos -->
+      <div class="quick-access">
+        <h2>Acceso Rápido</h2>
+        <div class="cards-container">
+          <div class="card" (click)="navigateToPatientList()">
+            <div class="card-image">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <button class="card-button">LISTA PACIENTES</button>
+          </div>
+
+          <div class="card" (click)="navigateToCalendar()">
+            <div class="card-image">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <button class="card-button">CALENDARIO</button>
+          </div>
         </div>
       </div>
     </main>
   </div>
 </div>
-
