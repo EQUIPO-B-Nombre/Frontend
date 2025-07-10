@@ -1,1 +1,308 @@
-<p>patient-treatments works!</p>
+<div class="treatments-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="assets/images/logo-oncontigo.png" alt="OnContigo Logo" class="logo">
+    </div>
+    <div class="navigation">
+      <a routerLink="/patient/home" class="nav-link">Inicio</a>
+      <a routerLink="/patient/calendar" class="nav-link">Calendario</a>
+      <a routerLink="/patient/treatments" class="nav-link active">Tratamientos</a>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Sidebar con lista de tratamientos -->
+    <div class="treatments-sidebar">
+      <div class="sidebar-header">
+        <h2>Mis Tratamientos</h2>
+      </div>
+
+      <div class="treatments-list">
+        <div
+          *ngFor="let treatment of treatments"
+          class="treatment-card"
+          [ngClass]="{ 'active': selectedTreatment?.id === treatment.id }"
+          (click)="selectTreatment(treatment)">
+
+          <div class="treatment-header">
+            <h3>{{ treatment.name }}</h3>
+            <span class="treatment-status" [ngClass]="getStatusClass(treatment.status)">
+              {{ treatment.status | titlecase }}
+            </span>
+          </div>
+
+          <div class="treatment-info">
+            <p class="doctor-name">{{ treatment.doctorName }}</p>
+            <div class="treatment-dates">
+              <span>{{ formatDate(treatment.startDate) }} - {{ formatDate(treatment.endDate) }}</span>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="treatment.progress"></div>
+            </div>
+            <span class="progress-text">{{ treatment.progress }}% completado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido principal del tratamiento -->
+    <div class="treatment-main" *ngIf="selectedTreatment">
+      <div class="treatment-header-main">
+        <div class="treatment-title">
+          <h1>{{ selectedTreatment.name }}</h1>
+          <span class="status-badge" [ngClass]="getStatusClass(selectedTreatment.status)">
+            {{ selectedTreatment.status | titlecase }}
+          </span>
+        </div>
+
+        <div class="treatment-meta">
+          <div class="doctor-info">
+            <img [src]="selectedTreatment.doctorPhoto" alt="Doctor" class="doctor-avatar">
+            <div>
+              <h4>{{ selectedTreatment.doctorName }}</h4>
+              <p>Doctor Responsable</p>
+            </div>
+          </div>
+
+          <div class="treatment-stats">
+            <div class="stat">
+              <span class="stat-value">{{ getDaysRemaining(selectedTreatment.endDate) }}</span>
+              <span class="stat-label">Días restantes</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">{{ getTreatmentDuration(selectedTreatment.startDate, selectedTreatment.endDate) }}</span>
+              <span class="stat-label">Días totales</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">{{ selectedTreatment.progress }}%</span>
+              <span class="stat-label">Progreso</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs de navegación -->
+      <div class="tabs-container">
+        <div class="tabs">
+          <button
+            class="tab"
+            [ngClass]="{ 'active': activeTab === 'overview' }"
+            (click)="setActiveTab('overview')">
+            Resumen
+          </button>
+          <button
+            class="tab"
+            [ngClass]="{ 'active': activeTab === 'medications' }"
+            (click)="setActiveTab('medications')">
+            Medicamentos
+          </button>
+          <button
+            class="tab"
+            [ngClass]="{ 'active': activeTab === 'appointments' }"
+            (click)="setActiveTab('appointments')">
+            Citas
+          </button>
+          <button
+            class="tab"
+            [ngClass]="{ 'active': activeTab === 'notes' }"
+            (click)="setActiveTab('notes')">
+            Notas
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenido de las tabs -->
+      <div class="tab-content">
+
+        <!-- Tab Overview -->
+        <div *ngIf="activeTab === 'overview'" class="tab-panel">
+          <div class="overview-content">
+            <div class="description-card">
+              <h3>Descripción del Tratamiento</h3>
+              <p>{{ selectedTreatment.description }}</p>
+            </div>
+
+            <div class="progress-section">
+              <h3>Progreso del Tratamiento</h3>
+              <div class="progress-container">
+                <div class="progress-bar-large">
+                  <div class="progress-fill-large" [style.width.%]="selectedTreatment.progress"></div>
+                </div>
+                <span class="progress-percentage">{{ selectedTreatment.progress }}%</span>
+              </div>
+            </div>
+
+            <div class="quick-stats">
+              <div class="quick-stat-card">
+                <h4>{{ selectedTreatment.medications.length }}</h4>
+                <p>Medicamentos</p>
+              </div>
+              <div class="quick-stat-card">
+                <h4>{{ selectedTreatment.appointments.length }}</h4>
+                <p>Citas programadas</p>
+              </div>
+              <div class="quick-stat-card">
+                <h4>{{ selectedTreatment.notes.length }}</h4>
+                <p>Notas registradas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Medications -->
+        <div *ngIf="activeTab === 'medications'" class="tab-panel">
+          <div class="medications-content">
+            <h3>Medicamentos Recetados</h3>
+
+            <div class="medications-list">
+              <div *ngFor="let medication of selectedTreatment.medications" class="medication-card">
+                <div class="medication-header">
+                  <h4>{{ medication.name }}</h4>
+                  <span class="dosage">{{ medication.dosage }}</span>
+                </div>
+
+                <div class="medication-details">
+                  <p><strong>Frecuencia:</strong> {{ medication.frequency }}</p>
+                  <p><strong>Instrucciones:</strong> {{ medication.instructions }}</p>
+                  <p><strong>Desde:</strong> {{ formatDate(medication.startDate) }}</p>
+                  <p *ngIf="medication.endDate"><strong>Hasta:</strong> {{ formatDate(medication.endDate) }}</p>
+                </div>
+
+                <div class="medication-actions">
+                  <div class="next-dose" *ngIf="medication.nextDose">
+                    <span>Próxima dosis: {{ medication.nextDose }}</span>
+                  </div>
+                  <button
+                    class="btn-take-medication"
+                    [ngClass]="{ 'taken': medication.taken }"
+                    (click)="markMedicationAsTaken(medication.id)"
+                    [disabled]="medication.taken">
+                    {{ medication.taken ? 'Tomado' : 'Marcar como tomado' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Appointments -->
+        <div *ngIf="activeTab === 'appointments'" class="tab-panel">
+          <div class="appointments-content">
+            <h3>Citas del Tratamiento</h3>
+
+            <div class="appointments-list">
+              <div *ngFor="let appointment of selectedTreatment.appointments" class="appointment-card">
+                <div class="appointment-date">
+                  <span class="date">{{ formatDate(appointment.date) }}</span>
+                  <span class="time">{{ appointment.time }}</span>
+                </div>
+
+                <div class="appointment-info">
+                  <h4>{{ appointment.type }}</h4>
+                  <span class="appointment-status" [ngClass]="getAppointmentStatusClass(appointment.status)">
+                    {{ appointment.status | titlecase }}
+                  </span>
+                  <p *ngIf="appointment.notes" class="appointment-notes">
+                    <strong>Notas:</strong> {{ appointment.notes }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Notes -->
+        <div *ngIf="activeTab === 'notes'" class="tab-panel">
+          <div class="notes-content">
+            <div class="notes-header">
+              <h3>Notas del Tratamiento</h3>
+              <button class="btn-add-note" (click)="openNewNoteModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Agregar Nota
+              </button>
+            </div>
+
+            <div class="notes-list">
+              <div *ngFor="let note of selectedTreatment.notes" class="note-card">
+                <div class="note-header">
+                  <h4>{{ note.title }}</h4>
+                  <div class="note-meta">
+                    <span class="note-author">{{ note.author }}</span>
+                    <span class="note-date">{{ formatDate(note.date) }}</span>
+                  </div>
+                </div>
+
+                <div class="note-content">
+                  <p>{{ note.content }}</p>
+                </div>
+
+                <div class="note-type" [ngClass]="'note-' + note.type">
+                  {{ note.type === 'doctor' ? 'Nota médica' : note.type === 'patient' ? 'Nota personal' : 'Nota del sistema' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje cuando no hay tratamiento seleccionado -->
+    <div class="no-treatment-selected" *ngIf="!selectedTreatment">
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5Z"></path>
+        </svg>
+        <h3>Selecciona un tratamiento</h3>
+        <p>Elige un tratamiento de la lista para ver sus detalles</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para nueva nota -->
+  <div class="modal-overlay" *ngIf="showNewNoteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Agregar Nueva Nota</h3>
+        <button class="close-btn" (click)="closeNewNoteModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form class="note-form">
+        <div class="form-group">
+          <label for="note-title">Título *</label>
+          <input type="text" id="note-title" [(ngModel)]="newNote.title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="note-content">Contenido *</label>
+          <textarea
+            id="note-content"
+            [(ngModel)]="newNote.content"
+            name="content"
+            rows="5"
+            placeholder="Escribe tu nota aquí..."
+            required>
+          </textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="closeNewNoteModal()">
+            Cancelar
+          </button>
+          <button type="button" class="btn-primary" (click)="addNote()">
+            Guardar Nota
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
